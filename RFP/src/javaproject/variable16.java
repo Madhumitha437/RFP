@@ -9,7 +9,7 @@ public class variable16 {
 	{
 		System.out.println("Static method is called.");
 	}
-	static int a=10;
+	static int a=100;
 	static
 	{
 		System.out.println("Static block executed before main method");

@@ -378,7 +378,7 @@ class employee
 	            .toList();
 	    if (result.isEmpty())
 	    {
-	        System.out.println("\n❌ No employees found in department: " + deptName);
+	        System.out.println("\n No employees found in department: " + deptName);
 	        return;
 	    }
 	    System.out.println("\n--- Employees in Department: " + deptName + " ---");

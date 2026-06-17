@@ -1,6 +1,8 @@
 package project;
 import java.util.*;
+import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import java.io.*;
@@ -26,13 +28,19 @@ class employee
 	private String  designation;
 	private float sal;
 	private String email;
+	private static final Logger logger =
+	        Logger.getLogger(employee.class.getName());
 	@Override
 	public String toString()
 	{
 	    return empid + "," + empname + "," + dept + "," +
 	           designation + "," + sal + "," + email;
 	}
-	 public employee(int empid,String empname,String dept,String  designation,float sal,String email)
+	public employee()
+	{
+		// default constructor
+	}
+	public employee(int empid,String empname,String dept,String  designation,float sal,String email)
 	{
 		this.empid= empid;
 		this.empname=empname;
@@ -101,17 +109,18 @@ class employee
 		try(BufferedWriter bw = new BufferedWriter(new FileWriter(filename, true)))
 		{
 		
-			bw.write(empid + "," +
-			         empname + "," +
-			         dept + "," +
-			         designation + "," +
-			         sal + "," +
-			         email);
+			bw.write(getEmpid() + "," +
+	                 getEmpname() + "," +
+	                 getDept() + "," +
+	                 getDesignation() + "," +
+	                 getSal() + "," +
+	                 getEmail());
 			bw.newLine();
 		}
 		catch(IOException e)
 		{
 			System.out.println("File occured while opening file");
+			logger.info("File occured while opening file");
 		}
 	}
 	void display(String filename)
@@ -128,6 +137,7 @@ class employee
 		catch(IOException e)
 		{
 			System.out.println("File occured while opening");
+			logger.info("File occured while opening file");
 		}
 	}
 	 static void search_using_id(String filename, int id)
@@ -155,11 +165,13 @@ class employee
 				 	if(flag==1)
 				 	{
 				 		System.out.println("Employee not found");
+				 		logger.info("Employee details search:Failed ");
 				 	}
 		 }
 		 catch(IOException e)
 		 {
 				System.out.println("File occured while opening");
+				logger.info("File occured while opening file");
 		 }
 	}
 	static void delete_using_id(String filename, int id)
@@ -184,6 +196,7 @@ class employee
 			if(flag==1)
 			{
 				System.out.println("Employee not found");
+				logger.info("Employee Deletion : Failed- Emp id not found");
 			}
 			else
 			{
@@ -200,6 +213,7 @@ class employee
 		catch(IOException e)
 		 {
 				System.out.println("File occured while opening");
+				logger.info("File occured while opening file");
 		 }
 	}
 	static void sort_employees(String filename, int sort_choice)
@@ -297,6 +311,7 @@ class employee
 	    if (emp_to_update.isEmpty())
 	    {
 	        System.out.println("Employee not found");
+	        logger.info("");
 	        return;
 	    }
 
@@ -339,6 +354,7 @@ class employee
 	    catch (IOException e)
 	    {
 	        System.out.println("Error writing file");
+	        logger.info("Error while writing a file");
 	        return;
 	    }
 
@@ -381,13 +397,26 @@ class employee
 	        System.out.println("\n No employees found in department: " + deptName);
 	        return;
 	    }
-	    System.out.println("\n--- Employees in Department: " + deptName + " ---");
+	    System.out.println("\n Employees in Department: " + deptName + "");
 	    result.forEach(System.out::println);
 	}
 }
 public class employee_management {
 
 	private static final Logger logger=Logger.getLogger(employee_management.class.getName());
+	static {
+		try
+		{
+			FileHandler fh= new FileHandler("Employee.log",true);
+			fh.setFormatter(new SimpleFormatter());
+			logger.addHandler(fh);
+			
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
 	public static void validateSal(float sal) throws salException
 	{
 		if (sal<5000)  throw new salException("Salary must be greater than 5000");
@@ -466,14 +495,13 @@ public class employee_management {
 						logger.warning(e.getMessage());
 						continue;
 					}
-					employee e1 = new employee(
-					        empid,
-					        empname,
-					        dept,
-					        designation,
-					        sal,
-					        email);
-
+					employee e1 = new employee();
+					e1.setEmpid(empid);
+					e1.setEmpname(empname);
+					e1.setDept(dept);
+					e1.setDesignation(designation);
+					e1.setSal(sal);
+					e1.setEmail(email);
 					e1.add_employee(filename);
 					logger.info("Employee Added Successfully");
 				}

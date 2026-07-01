@@ -1,0 +1,3 @@
+101,madhu,cse,developer,10000.0,madhu@gmail.com
+23,azhara,cse,developer,90000.0,azhara30@gmail.com
+23,devi,cse,devops,8900.0,devi98@gmail.com
